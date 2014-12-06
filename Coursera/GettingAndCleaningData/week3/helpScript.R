@@ -1,0 +1,22 @@
+library(dplyr);
+library(tidyr);
+library(reshape2)
+library(Hmisc);
+q3 <- read.csv("./week3/q3.csv",header=F,skip=5,stringsAsFactors=F);
+q3 <- select(q3,V1,V2,V4,V5);
+names(q3) <- c("CountryCode","Ranking","Long.Name","GDP");
+q3$GDP <- as.numeric(gsub(",", "", q3$GDP));
+q3$Ranking <- as.numeric(gsub(",", "", q3$Ranking));
+df1 <- q3[1:190,];
+df2 <- read.csv("./week3/q31.csv",header=T,stringsAsFactors=F);
+m <- merge(df1,df2,by.x="CountryCode", by.y="CountryCode");
+#total <- merge(df1,df2,by="CountryCode",sort=T);
+m <- m[order(m$GDP),];
+head(m[,c("CountryCode","GDP")],20);
+#mean(m[m$Income.Group=='High income: nonOECD',]$GDP);
+mean(m[m$Income.Group == "High income: nonOECD", "Ranking"]);
+mean(m[m$Income.Group == "High income: OECD", "Ranking"]);
+mm <- m;
+mm$Ranking <- cut2(mm$Ranking, g = 5);
+q5 <- dcast(mm,Ranking ~ Income.Group);
+q5;
