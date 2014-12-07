@@ -29,13 +29,13 @@ m <- rbind(xtrain, xtest);
 names(m) <- features;
 
 # rbind subjects and labels of trainings and test set, and
-#  merge them temporary, then use cbind for adding to data set m
+#  merge them temporary, then use cbind for adding to dataset m
 mergedsubjects <- rbind(subjecttrain, subjecttest);
 mergedlabels <- rbind(ytrain, ytest);
 m <- cbind(mergedsubjects, mergedlabels, m);
 
 # get indices of mean and std variables and extract
-#  them from the data set m (use c(bind)) for preventing
+#  them from the dataset m (use c(bind)) for preventing
 #  the removal of 1st and 2nd column (subjects and labels))
 msindices <- grep("([Mm]ean|[Ss]td)", names(m));
 m <- m[, c(1, 2, msindices)];
@@ -55,7 +55,7 @@ activities <- activities[,2];
 # use "mapvalues" from "plyr" package for renaming the activity column
 m[,2] <- mapvalues(m[,2], from = c(1,2,3,4,5,6), to = c(activities));
 
-# make tidy data set by using "melt" function and reshape data using
+# make tidy dataset by using "melt" function and reshape data using
 #  "dcast" function, additionally apply mean with the help of "dcast",
 #  then change names for better readability in written table using "gsub"
 meltedm <- melt(m, id = c("Subject", "Activity"));
@@ -65,5 +65,5 @@ names(tidym) <- gsub("mean", "Mean", names(tidym));
 names(tidym) <- gsub("std", "Std", names(tidym));
 names(tidym) <- gsub("gravity", "Gravity", names(tidym));
 
-#  finally write this new data set into "tidy_UCI_HAR_data.txt" using "write.table"
+#  finally write this new dataset into "tidy_UCI_HAR_data.txt" using "write.table"
 write.table(tidym, file = "./project/tidy_UCI_HAR_data.txt", row.name = F);
