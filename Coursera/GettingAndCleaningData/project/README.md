@@ -15,3 +15,5 @@ The _run_analysis.R_ script uses basically the data from the _UCI_HAR_Dataset_ f
 This data is combined into a new dataset, while the feature names found in the _UCI_HAR_Dataset/features.txt_ file are used as the column names.
 
 From this new dataset, the columns containing the measurements on the mean and standard deviation for each measurement are extracted and a new independent tidy dataset with the average of each variable for each activity and each subject is created and written into the _tidy_UCI_HAR_data.txt_ file.
+
+For more information on the data check the _README.txt_ in the _UCI_HAR_Dataset folder or the _CodeBook.md_ file.
