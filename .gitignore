@@ -41,7 +41,3 @@ Thumbs.db
 *.mp4
 *.avi
 *.mpeg
-
-# Big data files #
-##################
-household_power_consumption.txt
