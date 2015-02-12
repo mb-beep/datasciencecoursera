@@ -1,0 +1,12 @@
+base
+swirl
+ggplot2
+jpeg
+reshape2
+knitr
+plyr
+R.methodsS3
+R.oo
+R.utils
+lubridate
+gridExtra
