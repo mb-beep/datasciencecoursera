@@ -1,0 +1,119 @@
+---
+title: 'Regression Models: Peer Assessment'
+author: "munirbe"
+date: "Saturday, March 14, 2015"
+output: pdf_document
+---
+
+# Executive summary
+
+*Motor Trend*, a magazine about the automobile industry, is interested in exploring the relationship between a set of variables and miles per gallon (MPG) of a data set of a collection of cars. They are paritcularly interested in answering the following questions:
+
+* *"Is an automatic or manual transmission better for MPG"*
+* *"Quantify the MPG difference between automatic and manual transmissions"*
+
+To answer this questions, the **mtcars** data set is used. The **mtcars** data set comprises fuel consumption and 10 aspects of automobile design and performance for 32 automobiles (1973-1974 models).
+
+# Loading the data
+
+```{r loadDat}
+data(mtcars);
+dim(mtcars);
+names(mtcars);
+```
+
+As one can see, the data set contains 32 observations on 11 variables (a description of the variables can be found in the Annex).
+
+# Answering the questions / modeling
+
+To get an overview of the effect of the transmission type on the variable **mpg**, a boxplot has been prepared (the code for the boxplot can be found in the Annex).
+
+```{r boxplot1, echo = FALSE}
+library(ggplot2);
+mtcars$am <- as.factor(mtcars$am);
+levels(mtcars$am) <- c("Automatic", "Manual");
+g <- ggplot(data = mtcars, aes(x = am, y = mpg, fill = am)) +
+    geom_boxplot() +
+    ggtitle("Boxplot of the mtcars data set") +
+    ylab("Miles/(US) gallon") +
+    xlab("") +
+    scale_fill_manual(values = c("#999999", "#E69F00"), name = "Transmission");
+print(g);
+```
+
+As one can see, **mpg** tends to higher values when the transmission type is *manual*. To quantify this, a linear model was fitted (the summary of the fit can be seen in the Annex):
+
+```{r fit1}
+fit1 <- lm(mpg ~ ., data = mtcars);
+```
+As it can be seen in the Annex, approx. 87% of the variance are explained with this linear model, further, when looking at the estimates, one can see that the biggest influence on **mpg** comes from the variables **am** (highest estimate) and **wt** (lowest estimate). A new model was fitted (see summary in the Annex):
+
+```{r fit2}
+fit2 <- lm(mpg ~ wt * am, data = mtcars);
+```
+
+This new model explains approx. 83% of the variance, hence **am** and **wt** have the biggest influence on **mpg** (figure 1 in the Annex shows the influence of **wt** on **mpg** with respect of the transmission type). Comparing the variances, only 4% less variance is explained when simply using a multiple linear with **wt** and **am** as predictor variables. Hence, this model is good enough to show the influence of **am** and **wt**.
+
+# Conclusion
+
+As seen above and in the Annex (residual analysis), a multiple linear least squares regression is appropriate for modeling this problem. Taking **wt** and **am** as predictor variables to model **mpg**, one can see that a great amount of variance is explained with the model, and that only 4% less variance is explained compared to the first model, where all the variables of the data set were taken into account to model **mpg**. Moreover, the model shows that cars with manual transmission add 14.8784 + (-5.2984)*wt more MPG on average than cars with automatic transmission.
+
+# Annex
+
+## Description of variables
+* **mpg** Miles/(US) gallon
+* **cyl** Number of cylinders
+* **disp** Displacement (cu.in.)
+* **hp** Gross horespower
+* **drat** Rear axle ratio
+* **wt** Weight (lb/1000)
+* **qsec** 1/4 mile time
+* **vs** V/S
+* **am** Transmission (0 = automatic, 1 = manual)
+* **gear** Number of forward gears
+* **carb** Number of carburetors
+
+## Code for boxplot
+
+```{r boxplot2, echo = TRUE, fig.show = 'hide'}
+library(ggplot2);
+mtcars$am <- as.factor(mtcars$am);
+levels(mtcars$am) <- c("Automatic", "Manual");
+g <- ggplot(data = mtcars, aes(x = am, y = mpg, fill = am)) +
+    geom_boxplot() +
+    ggtitle("Boxplot of the mtcars data set") +
+    ylab("Miles/(US) gallon") +
+    xlab("") +
+    scale_fill_manual(values = c("#999999", "#E69F00"), name = "Transmission");
+print(g);
+```
+
+## Summary of fit1
+```{r summary}
+summary(fit1);
+```
+
+## Summary of fit2
+```{r summary2}
+summary(fit2);
+```
+
+## Influence of **wt** on **mpg** (figure 1)
+
+```{r fig1}
+g <- ggplot(data = mtcars, aes(x = wt, y = mpg, colour = am)) +
+    geom_point(size = 4) +
+    scale_colour_manual(values = c("#999999", "#E69F00"), name = "Transmission") +
+    ggtitle("Influence of wt on mpg") +
+    xlab("Weight [lb/1000]") +
+    ylab("Miles/(US) gallon") +
+    geom_abline(intercept = coef(fit2)[1], slope = coef(fit2)[2], colour = "#999999") +
+    geom_abline(intercept = coef(fit2)[1] + coef(fit2)[3], slope = coef(fit2)[2] + coef(fit2)[4], colour = "#E69F00");
+print(g);
+```
+
+## Residual analysis
+```{r resAnalysis}
+par(mfrow = c(2, 2));
+plot(fit2);
+```

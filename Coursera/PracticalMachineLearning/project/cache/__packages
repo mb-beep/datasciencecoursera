@@ -1,0 +1,12 @@
+base
+bitops
+RCurl
+lattice
+ggplot2
+caret
+randomForest
+foreach
+e1071
+knitr
+rpart
+rpart.plot
